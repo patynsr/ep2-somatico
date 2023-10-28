@@ -221,7 +221,7 @@ zgrep "\#" WP312.filtered.vcf.gz > header.txt
 ```
 
 ```bash
-zgrep -v "\#" WP312.filtered.vcf.gz | awk '{print("chr"$0)}' > variants.txt
+zgrep -v "\#" WP312.filtered.vcf.gz | grep ^9 | awk '{print("chr"$0)}' > variants.txt
 ```
 
 ```bash
