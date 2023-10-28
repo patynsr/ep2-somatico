@@ -19,8 +19,7 @@ echo "Aexyo" | sratoolkit.3.0.0-ubuntu64/bin/vdb-config
 
 # Download do arquivo WP312
 ```bash
-brew install sratoolkit
-```time parallel-fastq-dump --sra-id SRR8856724 \
+time parallel-fastq-dump --sra-id SRR8856724 \
 --threads 4 \
 --outdir ./ \
 --split-files \
@@ -74,6 +73,25 @@ wget -c  https://storage.googleapis.com/gatk-best-practices/somatic-b37/af-only-
 ```
 
 
+# Combinar com pipes: bwa + samtools view e sort
 
+```bash
+NOME=WP312; Biblioteca=Nextera; Plataforma=illumina;
+bwa mem -t 10 -M -R "@RG\tID:$NOME\tSM:$NOME\tLB:$Biblioteca\tPL:$Plataforma" chr9.fa SRR8856724_1.fastq.gz SRR8856724_2.fastq.gz | samtools view -F4 -Sbu -@2 - | samtools sort -m4G -@2 -o WP312_sorted.bam
+```
 
+# Remover duplicata de PCR ****RODAR****
 
+```bash
+samtools rmdup WP312_sorted.bam WP312_sorted_rmdup.bam
+```
+
+# Adicionando chr nos VCFs do Gnomad e PoN ****RODAR****
+
+```bash
+grep "\#" af-only-gnomad.raw.sites.vcf > af-only-gnomad.raw.sites.chr.vcf
+```
+
+```bash
+grep  "^9" af-only-gnomad.raw.sites.vcf |  awk '{print("chr"$0)}' >> af-only-gnomad.raw.sites.chr.vcf
+```
