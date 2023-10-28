@@ -55,4 +55,25 @@ bwa index chr9.fa
 samtools faidx chr9.fa
 ```
 
+# Download das referências do hg19
+
+```bash
+wget -c https://storage.googleapis.com/gatk-best-practices/somatic-b37/Mutect2-WGS-panel-b37.vcf
+```
+
+```bash
+wget -c https://storage.googleapis.com/gatk-best-practices/somatic-b37/Mutect2-WGS-panel-b37.vcf.idx
+```
+
+```bash
+wget -c  https://storage.googleapis.com/gatk-best-practices/somatic-b37/af-only-gnomad.raw.sites.vcf
+```
+
+```bash
+wget -c  https://storage.googleapis.com/gatk-best-practices/somatic-b37/af-only-gnomad.raw.sites.vcf.idx
+```
+
+
+
+
 
