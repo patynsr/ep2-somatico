@@ -195,3 +195,52 @@ unzip gatk-4.2.2.0.zip
 -O WP312.contamination.table
 ```
 
+```bash
+./gatk-4.2.2.0/gatk Mutect2 \
+  -R chr9.fa \
+  -I WP312_sorted_rmdup.bam \
+  --germline-resource af-only-gnomad.raw.sites.chr.vcf.gz  \
+  --panel-of-normals Mutect2-WGS-panel-b37.chr.vcf.gz \
+  --disable-sequence-dictionary-validation \
+  -L WP312_coverageBed20x.interval_list \
+  -O WP312.somatic.pon.vcf.gz
+```
+
+```bash
+./gatk-4.2.2.0/gatk FilterMutectCalls \
+-R chr9.fa \
+-V WP312.somatic.pon.vcf.gz \
+--contamination-table WP312.contamination.table \
+-O WP312.filtered.pon.vcf.gz
+```
+
+# Adicionar chr no arquivo para comparação
+
+```bash
+zgrep "\#" WP312.filtered.vcf.gz > header.txt
+```
+
+```bash
+zgrep -v "\#" WP312.filtered.vcf.gz | awk '{print("chr"$0)}' > variants.txt
+```
+
+```bash
+cat header.txt variants.txt > WP312.filtered.chr.vcf
+```
+
+```bash
+bgzip WP312.filtered.chr.vcf
+tabix -p vcf WP312.filtered.chr.vcf.gz
+```
+
+# Instalação vcftools
+
+```bash
+brew install vcftools
+```
+
+# Comparação
+
+```bash
+vcf-compare WP312.filtered.pon.vcf.gz WP312.filtered.chr.vcf.gz
+```
